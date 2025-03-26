@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM vs LLM-RAG</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-image: url('./static/background.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: scroll;
+            color: #333;
+        }
+
+        h1 {
+            font-family: 'Trebuchet MS', sans-serif;
+            font-size: 3em;
+            color: #ffffff;
+            text-shadow: 2px 2px 5px rgba(25, 150, 164, 0.614);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label, p {
+            font-size: 18px;
+            color: #2c3e50;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            border-radius: 4px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button[type="submit"] {
+            background-color: #79BFC7;
+            color: white;
+            border-radius: 25px;
+            padding: 10px 25px;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #41949D;
+        }
+
+        h2 {
+            color: #34495e;
+        }
+
+        .question, .response, .thoughts {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .response p {
+            white-space: pre-line;
+        }
+
+        .thoughts {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 30px;
+        }
+
+        .thoughts a {
+            color: #2980b9;
+            text-decoration: none;
+        }
+
+        .thoughts a:hover {
+            text-decoration: underline;
+        }
+
+        /* 提示信息的样式 */
+        #loadingMessage {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 20px; /* 调整字体大小 */
+            color: #71C4CF; /* 字体颜色 */
+            background-color: #E3F3F5; /* 背景颜色 */
+            padding: 15px; /* 内边距 */
+            border-radius: 10px; /* 圆角边框 */
+            border: 2px solid #3FACBB; /* 边框颜色 */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+            display: none; /* 初始隐藏 */
+            max-width: 600px; /* 限制宽度 */
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Health Risk Intelligent Chatbot</h1>
+    <form method="POST" id="questionForm" action="/"> <!-- 设置正确的 action 属性 -->
+        <label for="question">Enter your question:</label><br>
+        <input type="text" id="question" name="question" required placeholder="Type your question here..."><br><br>
+        
+        <button type="submit" name="ask_llm">Ask LLM</button>
+        <button type="submit" name="ask_llm_rag">Ask LLM-RAG</button>
+    </form>
+
+    <!-- 加载提示信息 -->
+    <div id="loadingMessage">Chatbot is thinking, please wait...</div>
+
+    <script>
+        // 监听表单提交事件
+        document.getElementById("questionForm").addEventListener("submit", function(event) {
+            // 显示加载提示信息
+            document.getElementById('loadingMessage').style.display = 'block';
+        });
+    </script>
+
+    {% if question %}
+        <div class="question">
+            <h2>Question:</h2>
+            <p>{{ question }}</p>
+        </div>
+    {% endif %}
+
+    {% if response %}
+        <div class="response">
+            <h2>Answer:</h2>
+            <p>{{ response|safe }}</p> <!-- 使用 safe 过滤器允许 HTML 格式 -->
+        </div>
+    {% endif %}
+
+    {% if thoughts %}
+        <div class="thoughts">
+            <h2>Thoughts:</h2>
+            <p>{{ thoughts }}</p>
+        </div>
+    {% endif %}
+</body>
+</html>
